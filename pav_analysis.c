@@ -33,7 +33,7 @@ float compute_zcr(const float *x, unsigned int N, float fm)
     }
     sum = sum + delta;
   }
-  float zcr = (fm / 2) * (1 / (N - 1)) * sum;
+  float zcr = (fm / 2) * (sum / (N - 1));
 
   return zcr;
 }
