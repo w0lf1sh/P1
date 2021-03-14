@@ -21,13 +21,15 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    FILE *output = fopen(argv[2], "w+");
+
     if ((fpWave = abre_wave(argv[1], &fm)) == NULL)
     {
         fprintf(stderr, "Error al abrir %s (%s)\n", argv[1], strerror(errno));
         return -1;
     }
 
-    N = durTrm * fm;        //calcula el numero fr muestras que tenemos en 10 ms (durTrm)
+    N = durTrm * fm; //calcula el numero fr muestras que tenemos en 10 ms (durTrm)
 
     //ubica matrices para almacenar la senal que va a leer (buffer) y la que va a procesar (x)
     if ((buffer = malloc(N * sizeof(*buffer))) == 0 ||
@@ -43,10 +45,24 @@ int main(int argc, char *argv[])
         for (int n = 0; n < N; n++)
             x[n] = buffer[n] / (float)(1 << 15); //dividimos todas las muestras por 2^15 (valor maximo de una senal de 16 bits)
         //el margen de valores pasa de 32000:-32000 a 1:-1
-        printf("%d\t%f\t%f\t%f\n", trm, compute_power(x, N),
-               compute_am(x, N),
-               compute_zcr(x, N, fm));
+        if (argc == 3)
+        {
+            fprintf(output, "%d\t%f\t%f\t%f\n", trm, compute_power(x, N),
+                    compute_am(x, N),
+                    compute_zcr(x, N, fm));
+        }
+        else
+        {
+            printf("%d\t%f\t%f\t%f\n", trm, compute_power(x, N),
+                   compute_am(x, N),
+                   compute_zcr(x, N, fm));
+        }
         trm += 1;
+    }
+
+    if (argc == 3)
+    {
+        fclose(output);
     }
 
     cierra_wave(fpWave);

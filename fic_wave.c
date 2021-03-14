@@ -1,19 +1,25 @@
 #include <stdio.h>
 #include "fic_wave.h"
 
-FILE    *abre_wave(const char *ficWave, float *fm){
-    FILE    *fpWave;
+FILE *abre_wave(const char *ficWave, float *fm)
+{
+    FILE *fpWave;
 
-    if ((fpWave = fopen(ficWave, "r")) == NULL) return NULL;
-    if (fseek(fpWave, 44, SEEK_SET) < 0) return NULL;
+    if ((fpWave = fopen(ficWave, "r")) == NULL)
+        return NULL;
+    if (fseek(fpWave, 44, SEEK_SET) < 0)
+        return NULL;
+    *fm = 16000;
 
     return fpWave;
 }
 
-size_t   lee_wave(void *x, size_t size, size_t nmemb, FILE *fpWave) {
+size_t lee_wave(void *x, size_t size, size_t nmemb, FILE *fpWave)
+{
     return fread(x, size, nmemb, fpWave);
 }
 
-void    cierra_wave(FILE *fpWave){
-        fclose(fpWave);
+void cierra_wave(FILE *fpWave)
+{
+    fclose(fpWave);
 }
